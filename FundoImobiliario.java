@@ -53,8 +53,8 @@ public class FundoImobiliario {
 		double saldo;
 
     	// Classes
-    	Investidor investidor = new Investidor();
-    	Conta conta = new Conta();
+    	InvestidorDAO investidor = new InvestidorDAO();
+    	ContaDAO conta = new ContaDAO();
         Scanner s = new Scanner(System.in);
         
         System.out.print("Digite seu nome: ");
@@ -132,7 +132,7 @@ public class FundoImobiliario {
     private void acessarConta() {
         
         // Classes
-        Investidor investidor = new Investidor();
+        InvestidorDAO investidor = new InvestidorDAO();
         Scanner s = new Scanner(System.in);
 
         // Informações do Investidor
