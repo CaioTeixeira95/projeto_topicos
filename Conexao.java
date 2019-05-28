@@ -23,69 +23,9 @@ class Conexao {
 		}		
 	}
 
-	public void insert(String sql, Investidor investidor) {
+	public boolean selectVerificar(String sql, String columLabel) {
 
-		try {
-
-			this.getConnection();
-			this.st = this.conn.prepareStatement(sql);
-			this.st.setString(1, investidor.getNome());
-			this.st.setString(2, investidor.getCpf());
-			this.st.setString(3, investidor.getEmail());
-			this.st.setString(4, investidor.getSenha());
-
-			this.st.executeUpdate();
-			this.st.close();
-
-			System.out.println("Investidor cadastrado com sucesso!");
-
-		} catch(SQLException ex) {
-			System.out.println("Erro na instrução SQL: " + ex.getMessage());
-			System.out.println("Falha ao cadastrar o investidor!");
-			ex.printStackTrace();
-		} finally {
-			try {
-				this.conn.close();
-			} catch(Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-
-	}
-
-	public void insert(String sql, Conta conta) {
-
-		try {
-
-			this.getConnection();
-			this.st = this.conn.prepareStatement(sql);
-			this.st.setString(1, conta.getBanco());
-			this.st.setString(2, conta.getNumConta());
-			this.st.setString(3, conta.getAgencia());
-			this.st.setString(4, conta.getCpfTitular());
-			this.st.setDouble(5, conta.getSaldo());
-
-			this.st.executeUpdate();
-			this.st.close();
-
-			System.out.println("Conta cadastrada com sucesso!");
-
-		} catch(SQLException ex) {
-			System.out.println("Erro na instrução SQL: " + ex.getMessage());
-			ex.printStackTrace();
-			System.out.println("Falha ao cadastrar a conta!");
-		} finally {
-			try {
-				this.st.close();
-				this.conn.close();
-			} catch(Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		
-	}
-
-	public boolean selectVerificar(String sql) {
+		int num_rows = 0;
 
 		try {
 
@@ -93,10 +33,9 @@ class Conexao {
 			this.stmt = this.conn.createStatement();
 			this.rs = this.stmt.executeQuery(sql);
 
-			ResultSetMetaData meta = this.rs.getMetaData();
-			int numColunas = meta.getColumnCount();
-
-			return (numColunas > 0) ? true : false;
+			if(this.rs.next()) {
+				num_rows = this.rs.getInt(columLabel);
+			}
 
 		} catch(SQLException ex) {
 			System.out.println("Erro na instrução SQL: " + ex.getMessage());
@@ -110,35 +49,9 @@ class Conexao {
 			} catch(Exception exception) {
 				exception.printStackTrace();
 			}
-			return true;
+
+			return (num_rows > 0) ? true : false;
 		}
-	}
-
-	public Object select(String sql, Object obj) {
-
-		try {
-
-			this.getConnection();
-			this.stmt = this.conn.createStatement();
-			this.rs = this.stmt.executeQuery(sql);
-
-			return (numColunas > 0) ? true : false;
-
-		} catch(SQLException ex) {
-			System.out.println("Erro na instrução SQL: " + ex.getMessage());
-			ex.printStackTrace();
-			System.out.println("Não foi possível realizar a consulta.");
-		} finally {
-			try {
-				this.rs.close();
-				this.stmt.close();
-				this.conn.close();
-			} catch(Exception exception) {
-				exception.printStackTrace();
-			}
-			return true;
-		}
-
 	}
 
 	/*try {

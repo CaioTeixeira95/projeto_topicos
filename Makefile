@@ -7,3 +7,4 @@ run:
 
 clean:
 	rm -r *.class
+	clear

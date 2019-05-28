@@ -147,7 +147,7 @@ public class FundoImobiliario {
         System.out.println("Digite sua senha: ");
         senha = s.nextLine();
 
-        investidor.login(email, senha);
+        //investidor.login(email, senha);
     }
     
 }
