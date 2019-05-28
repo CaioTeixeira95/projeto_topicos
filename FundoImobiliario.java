@@ -133,6 +133,8 @@ public class FundoImobiliario {
         
         // Classes
         InvestidorDAO investidor = new InvestidorDAO();
+        Investidor inv = new Investidor();
+        ContaDAO conta = new ContaDAO();
         Scanner s = new Scanner(System.in);
 
         // Informações do Investidor
@@ -147,7 +149,19 @@ public class FundoImobiliario {
         System.out.println("Digite sua senha: ");
         senha = s.nextLine();
 
-        //investidor.login(email, senha);
+        inv = investidor.login(email, senha);
+
+        if(inv != null) {
+            inv.setConta(conta.buscaConta(inv.getCpf()));
+        }
+
+        System.out.println("****** Dados do Investidor *******");
+        System.out.println("Nome:\t" + inv.getNome());
+        System.out.println("CPF:\t" + inv.getCpf());
+        System.out.println("Banco:\t" + inv.contaBancaria.getBanco());
+        System.out.println("Nº Conta:\t" + inv.contaBancaria.getNumConta());
+        System.out.println("Agência:\t" + inv.contaBancaria.getAgencia());
+        System.out.println("Saldo Atual:\t" + inv.contaBancaria.getSaldo());
     }
     
 }

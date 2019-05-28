@@ -2,7 +2,7 @@ import java.sql.SQLException;
 
 class InvestidorDAO extends Investidor {
 
-	 public void mostrarDadosInvestidor() {
+	public void mostrarDadosInvestidor() {
         System.out.println("****** Dados do Investidor *******");
         System.out.println("Nome:\t" + this.getNome());
         System.out.println("CPF:\t" + this.getCpf());
@@ -23,10 +23,43 @@ class InvestidorDAO extends Investidor {
         return conexao.selectVerificar(sql, campo);
     }
 
-    /*public void login(String email, String senha) {
-        Conexao conexao = new Conexao();
-        String sql = "SELECT * FROM investidor WHERE email = '" + email + "' AND senha = '" + senha + "'";
-    }*/
+    public Investidor login(String email, String senha) {
+        
+        Conexao connection = new Conexao();
+        Investidor investidor = new Investidor();
+
+        try {
+        	
+        	String sql = "SELECT nome, cpf FROM investidor WHERE email = '" + email + "' AND senha = '" + senha + "'";
+        	//System.out.println(sql);
+
+        	connection.stmt = connection.conn.createStatement();
+        	connection.rs = connection.stmt.executeQuery(sql);
+
+        	if(connection.rs.next()) {
+        		System.out.println("Oi nene");
+        		investidor.setNome(connection.rs.getString("nome"));
+        		investidor.setCpf(connection.rs.getString("cpf"));
+        		investidor.setEmail(email);
+        		investidor.setSenha(senha);
+        	}
+
+        } catch(SQLException ex) {
+        	System.out.println("Erro na instrução SQL: " + ex.getMessage());
+        	System.out.println("Não foi possível fazer o login.");
+        	ex.printStackTrace();
+        } finally {
+        	try {
+        		connection.stmt.close();
+        		connection.rs.close();
+        		connection.conn.close();
+        	} catch(Exception exception) {
+        		exception.printStackTrace();
+        	}
+
+        	return investidor;
+        }
+    }
 
     public void insert(String sql, Investidor investidor) {
 

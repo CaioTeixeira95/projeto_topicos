@@ -11,7 +11,43 @@ class ContaDAO extends Conta {
         this.insert(sql, this);
     }
 
-    public void insert(String sql, ContaDAO conta) {
+    public Conta buscaConta(String cpf) {
+
+    	Conexao connection = new Conexao();
+    	Conta conta = new Conta();
+
+    	try {
+        	
+        	String sql = "SELECT * FROM conta WHERE cpf_titular = '" + cpf + "'";
+        	connection.stmt = connection.conn.createStatement();
+        	connection.rs = connection.stmt.executeQuery(sql);
+
+        	if(connection.rs.next()) {
+        		conta.setSaldo(connection.rs.getDouble("saldo"));
+        		conta.setNumConta(connection.rs.getString("num_conta"));
+        		conta.setAgencia(connection.rs.getString("agencia"));
+        		conta.setBanco(connection.rs.getString("banco"));
+        		conta.setCpfTitular(cpf);
+        	}
+
+        } catch(SQLException ex) {
+        	System.out.println("Erro na instrução SQL: " + ex.getMessage());
+        	System.out.println("Não foi possível fazer o login.");
+        	ex.printStackTrace();
+        } finally {
+        	try {
+        		connection.conn.close();
+        		connection.stmt.close();
+        	} catch(Exception exception) {
+        		exception.printStackTrace();
+        	}
+
+        	return conta;
+        }
+
+    }
+
+    public void insert(String sql, Conta conta) {
 
     	Conexao connection = new Conexao();
 
