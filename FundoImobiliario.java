@@ -36,6 +36,55 @@ public class FundoImobiliario {
         }
         
     }
+
+    private void menu(Investidor investidor) {
+
+        // Classes
+        Scanner s = new Scanner(System.in);
+
+        // Variáveis
+        String opcao;
+
+        System.out.println();
+        System.out.println("Olá " + investidor.getNome() + ", seja bem-vindo ao Fundo de Investimento Imobiliário FATEC!\n");
+        System.out.println("a - Comprar cotas");
+        System.out.println("b - Consultar suas cotas");
+        System.out.println("c - Vender suas cotas");
+        System.out.println("d - Minha Conta");
+        System.out.println("e - Alterar Dados da Conta");
+        if(investidor.getTipoInvestidor() == 1) {
+            System.out.println("? - Ler cotações do dia");
+        }
+        System.out.println("Selecione uma opção: ");
+        opcao = s.next();
+
+        switch(opcao) {
+
+            case "a":
+            break;          
+
+            case "b":
+            break;            
+            
+            case "c":
+            break;            
+
+            case "d":
+            break;            
+
+            case "e":
+            break;            
+
+            case "f":
+            break;
+
+            default:
+                System.out.println("Opção inválida!\n");
+            break;
+
+        }
+
+    }
     
     private void criarConta() {
         
@@ -127,14 +176,16 @@ public class FundoImobiliario {
         // Gravando no banco de dados
         investidor.salvarInvestidor();
         conta.salvarConta();
+
+        this.menu(investidor);
     }
     
     private void acessarConta() {
         
         // Classes
         InvestidorDAO investidor = new InvestidorDAO();
-        Investidor inv = new Investidor();
         ContaDAO conta = new ContaDAO();
+        String resp;
         Scanner s = new Scanner(System.in);
 
         // Informações do Investidor
@@ -149,19 +200,34 @@ public class FundoImobiliario {
         System.out.println("Digite sua senha: ");
         senha = s.nextLine();
 
-        inv = investidor.login(email, senha);
+        investidor = investidor.login(email, senha);
 
-        if(inv != null) {
-            inv.setConta(conta.buscaConta(inv.getCpf()));
+        if(investidor != null) {
+            investidor.setConta(conta.buscaConta(investidor.getCpf()));
+            this.menu(investidor);
+        } 
+        else {
+            System.out.println("Conta não encontrada!!\n");
+            System.out.println("Deseja Criar uma conta? [S/N]");
+            do {
+
+                resp = s.next();
+                resp = resp.toLowerCase();
+                
+                if(!"s".equals(resp) && !"n".equals(resp)) {
+                    System.out.println("Valor inválido, digite 's' para Sim e 'n' para Não");
+                }
+            
+            } while(!"s".equals(resp) && !"n".equals(resp));
+
+            if(resp.equals("s")) {
+                this.criarConta();
+            }
+            else {
+                this.acessarConta();
+            }
+
         }
-
-        System.out.println("****** Dados do Investidor *******");
-        System.out.println("Nome:\t" + inv.getNome());
-        System.out.println("CPF:\t" + inv.getCpf());
-        System.out.println("Banco:\t" + inv.contaBancaria.getBanco());
-        System.out.println("Nº Conta:\t" + inv.contaBancaria.getNumConta());
-        System.out.println("Agência:\t" + inv.contaBancaria.getAgencia());
-        System.out.println("Saldo Atual:\t" + inv.contaBancaria.getSaldo());
     }
     
 }

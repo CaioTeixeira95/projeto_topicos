@@ -4,6 +4,7 @@ class Investidor {
     private String cpf;
     private String email;
     private String senha;
+    private int tipo;
     Conta contaBancaria;
 
     public void setNome(String nome) {
@@ -44,6 +45,14 @@ class Investidor {
 
     public Conta getConta() {
         return this.contaBancaria;
+    }
+
+    public int setTipoInvestidor(int tipo) {
+        this.tipo = tipo;
+    }
+
+    public int getTipoInvestidor() {
+        return this.tipo;
     }
 
 }

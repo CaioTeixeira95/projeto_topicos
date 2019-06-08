@@ -17,31 +17,37 @@ class InvestidorDAO extends Investidor {
         this.insert(sql, this);
     }
 
+    public void alterarInvestidor() {
+
+    	
+    	
+    }
+
     public boolean verificaSeExiste(String campo, String valor) {
         Conexao conexao = new Conexao();
         String sql = "SELECT COUNT(*) AS " + campo + " FROM investidor WHERE " + campo + " = '" + valor + "'";
         return conexao.selectVerificar(sql, campo);
     }
 
-    public Investidor login(String email, String senha) {
+    public InvestidorDAO login(String email, String senha) {
         
         Conexao connection = new Conexao();
-        Investidor investidor = new Investidor();
+        InvestidorDAO investidor = new InvestidorDAO();
 
         try {
         	
         	String sql = "SELECT nome, cpf FROM investidor WHERE email = '" + email + "' AND senha = '" + senha + "'";
-        	//System.out.println(sql);
 
+        	connection.getConnection();
         	connection.stmt = connection.conn.createStatement();
         	connection.rs = connection.stmt.executeQuery(sql);
 
         	if(connection.rs.next()) {
-        		System.out.println("Oi nene");
         		investidor.setNome(connection.rs.getString("nome"));
         		investidor.setCpf(connection.rs.getString("cpf"));
         		investidor.setEmail(email);
         		investidor.setSenha(senha);
+        		investidor.setTipoInvestidor(connection.rs.getInt("tipo"));
         	}
 
         } catch(SQLException ex) {
@@ -54,6 +60,7 @@ class InvestidorDAO extends Investidor {
         		connection.rs.close();
         		connection.conn.close();
         	} catch(Exception exception) {
+        		exception.getMessage();
         		exception.printStackTrace();
         	}
 

@@ -19,6 +19,8 @@ class ContaDAO extends Conta {
     	try {
         	
         	String sql = "SELECT * FROM conta WHERE cpf_titular = '" + cpf + "'";
+        	
+        	connection.getConnection();
         	connection.stmt = connection.conn.createStatement();
         	connection.rs = connection.stmt.executeQuery(sql);
 
