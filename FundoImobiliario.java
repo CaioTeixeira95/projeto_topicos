@@ -2,242 +2,259 @@ import java.util.Scanner;
 
 public class FundoImobiliario {
 
-    public static void main(String[] args) {
-        FundoImobiliario fii = new FundoImobiliario();
-        fii.iniciar();       
-    }
-    
-    private void iniciar() {
-        
-        Scanner s = new Scanner(System.in);
-        String resp;
-        
-        System.out.println("*** Bem-vindo ao Fundo Imobiliario Fatec ***");
-        System.out.println("Você possui uma conta ? [S/N]");
-        
-        do {
-            
-            resp = s.next();
-            resp = resp.toLowerCase();
-            
-            if(!"s".equals(resp) && !"n".equals(resp)) {
-                System.out.println("Valor inválido, digite 's' para Sim e 'n' para Não");
-            }
-            
-        } while(!"s".equals(resp) && !"n".equals(resp));
+	public static void main(String[] args) {
+		FundoImobiliario fii = new FundoImobiliario();
+		fii.iniciar();  
+	}
+	
+	private void iniciar() {
+		
+		Scanner s = new Scanner(System.in);
+		String resp;
+		
+		System.out.println("*** Bem-vindo ao Fundo Imobiliario Fatec ***");
+		System.out.println("Você possui uma conta ? [S/N]");
+		
+		do {
+			
+			resp = s.next();
+			resp = resp.toLowerCase();
+			
+			if(!"s".equals(resp) && !"n".equals(resp)) {
+				System.out.println("Valor inválido, digite 's' para Sim e 'n' para Não");
+			}
+			
+		} while(!"s".equals(resp) && !"n".equals(resp));
 
-        //s.close();
-        
-        if(resp.equals("n")) {
-            this.criarConta();
-        }
-        else {
-            this.acessarConta();
-        }
-        
-    }
+		if(resp.equals("n")) {
+			this.criarConta();
+		}
+		else {
+			this.acessarConta();
+		}
+		
+	}
 
-    private void menu(Investidor investidor) {
+	private void menu(InvestidorDAO investidor) {
 
-        // Classes
-        Scanner s = new Scanner(System.in);
+		// Classes
+		Scanner s = new Scanner(System.in);
+		LimpaTela lt = new LimpaTela();
 
-        // Variáveis
-        String opcao;
+		// Variáveis
+		String opcao;
 
-        do {
+		do {
 
-            System.out.println();
-            System.out.println("Olá " + investidor.getNome() + ", seja bem-vindo ao Fundo de Investimento Imobiliário FATEC!\n");
-            System.out.println("a - Comprar cotas");
-            System.out.println("b - Consultar suas cotas");
-            System.out.println("c - Vender suas cotas");
-            System.out.println("d - Minha Conta");
-            System.out.println("e - Alterar Dados da Conta");
-            if(investidor.getTipoInvestidor() == 1) {
-                System.out.println("? - Ler cotações do dia");
-            }
-            System.out.println("s - Sair");
-            System.out.print("Selecione uma opção: ");
-            opcao = s.next();
+			lt.limparTela();
 
-            switch(opcao) {
+			System.out.println();
+			System.out.println("Olá " + investidor.getNome() + ", seja bem-vindo ao Fundo de Investimento Imobiliário FATEC!\n");
+			System.out.println("a - Comprar cotas");
+			System.out.println("b - Consultar suas cotas");
+			System.out.println("c - Vender suas cotas");
+			System.out.println("d - Minha Conta");
+			System.out.println("e - Alterar Dados da Conta");
+			if(investidor.getTipoInvestidor() == 1) {
+				System.out.println("? - Ler cotações do dia");
+			}
+			System.out.println("s - Sair");
+			System.out.print("Selecione uma opção: ");
+			opcao = s.next();
 
-                case "a":
-                break;          
+			switch(opcao) {
 
-                case "b":
-                break;            
-                
-                case "c":
-                break;            
+				case "a":
+				break;		  
 
-                case "d":
-                break;            
+				case "b":
+				break;			
+				
+				case "c":
+				break;			
 
-                case "e":
-                break;            
+				case "d":
+					lt.limparTela();
+					investidor.alterarInvestidor();
+				break;			
 
-                case "f":
-                break;
+				case "e":
+				break;			
 
-                case "s":
-                    System.out.println("Até mais " + investidor.getNome());
-                break;
+				case "f":
+				break;
 
-                default:
-                    System.out.println("Opção inválida!\n");
-                break;
+				case "s":
+					System.out.println("Até mais " + investidor.getNome());
+				break;
 
-            }
-            
-        } while(!opcao.equals("s"));
+				default:
+					System.out.println("Opção inválida!\n");
+				break;
 
-    }
-    
-    private void criarConta() {
-        
-        // Informações do Investidor
-        String nome;
-        String cpf;
-        String email;
-        String senha;
-        String senha2;
+			}
 
-        // Informações Bancárias
-        String banco;
+		} while(!opcao.equals("s"));
+
+	}
+	
+	private void criarConta() {
+		
+		// Informações do Investidor
+		String nome;
+		String cpf;
+		String email;
+		String senha;
+		String senha2;
+
+		// Informações Bancárias
+		String banco;
 		String numConta;
-    	String agencia;
+		String agencia;
 		double saldo;
 
-    	// Classes
-    	InvestidorDAO investidor = new InvestidorDAO();
-    	ContaDAO conta = new ContaDAO();
-        Scanner s = new Scanner(System.in);
-        
-        System.out.print("Digite seu nome: ");
-        nome = s.nextLine();
+		// Classes
+		InvestidorDAO investidor = new InvestidorDAO();
+		ContaDAO conta = new ContaDAO();
+		Scanner s = new Scanner(System.in);
+		
+		System.out.print("Digite seu nome: ");
+		nome = s.nextLine();
 
-        do {
-            
-            System.out.print("Digite seu CPF: ");
-            cpf = s.nextLine();
+		do {
+			
+			System.out.print("Digite seu CPF: ");
+			cpf = s.nextLine();
 
-            if(investidor.verificaSeExiste("cpf", cpf)) {
-                System.out.println("CPF já cadastrado. Tente novamente!\n");
-            }
+			if(investidor.verificaSeExiste("cpf", cpf)) {
+				System.out.println("CPF já cadastrado. Tente novamente!\n");
+			}
 
-        } while(investidor.verificaSeExiste("cpf", cpf));
+			if(!investidor.validaCpf(cpf)) {
+				System.out.println("CPF inválido. Tente novamente!\n");
+			}
 
-        do {
+		} while(investidor.verificaSeExiste("cpf", cpf) && !investidor.validaCpf(cpf));
 
-            System.out.print("Digite seu e-mail: ");
-            email = s.nextLine();
+		do {
 
-            if(investidor.verificaSeExiste("email", email)) {
-                System.out.println("Esse e-mail já está em uso, tente novamente.\n");
-            }
+			System.out.print("Digite seu e-mail: ");
+			email = s.nextLine();
 
-        } while(investidor.verificaSeExiste("email", email));
+			if(investidor.verificaSeExiste("email", email)) {
+				System.out.println("Esse e-mail já está em uso, tente novamente.\n");
+			}
 
-        do {
+			if(!investidor.validaEmail(email)) {
+				System.out.println("E-mail inválido, tente novamente.\n");
+			}
 
-            System.out.print("Digite sua senha: ");
-            senha = s.nextLine();
+		} while(investidor.verificaSeExiste("email", email) && !investidor.validaEmail(email));
 
-            System.out.print("Confirme sua senha: ");
-            senha2 = s.nextLine();
-            
-            if(!senha2.equals(senha)) {
-                System.out.println("As senhas não são iguais, tente novamente!\n");
-            }
+		do {
 
-        } while(!senha2.equals(senha));
+			System.out.print("Digite sua senha: ");
+			senha = s.nextLine();
 
-        System.out.print("Digite o seu banco: ");
-        banco = s.nextLine();
+			System.out.print("Confirme sua senha: ");
+			senha2 = s.nextLine();
+			
+			if(!senha2.equals(senha)) {
+				System.out.println("As senhas não são iguais, tente novamente!\n");
+			}
 
-        System.out.print("Digite o seu número da conta: ");
-        numConta = s.nextLine();
+		} while(!senha2.equals(senha));
 
-        System.out.print("Digite o seu agência: ");
-        agencia = s.nextLine();
+		System.out.print("Digite o seu banco: ");
+		banco = s.nextLine();
 
-        System.out.print("Digite o seu saldo: ");
-        saldo = s.nextDouble();
+		System.out.print("Digite o seu número da conta: ");
+		numConta = s.nextLine();
 
-        //s.close();
+		System.out.print("Digite o seu agência: ");
+		agencia = s.nextLine();
 
-        // Setando dados do Investidor
-        investidor.setNome(nome);
-        investidor.setCpf(cpf);
-        investidor.setEmail(email);
-        investidor.setSenha(senha);
-        investidor.setConta(conta);
+		System.out.print("Digite o seu saldo: ");
+		saldo = s.nextDouble();
 
-        // Setando dados da Conta
-        conta.setBanco(banco);
-        conta.setNumConta(numConta);
-        conta.setAgencia(agencia);
-        conta.setSaldo(saldo);
+		// Setando dados do Investidor
+		investidor.setNome(nome);
+		investidor.setCpf(cpf);
+		investidor.setEmail(email);
+		investidor.setSenha(senha);
+		investidor.setConta(conta);
 
-        // Gravando no banco de dados
-        investidor.salvarInvestidor();
+		// Setando dados da Conta
+		conta.setBanco(banco);
+		conta.setNumConta(numConta);
+		conta.setAgencia(agencia);
+		conta.setSaldo(saldo);
 
-        conta.setIdTitular(investidor.getId());
-        conta.salvarConta();
+		// Gravando no banco de dados
+		investidor.salvarInvestidor();
 
-        this.menu(investidor);
-    }
-    
-    private void acessarConta() {
-        
-        // Classes
-        InvestidorDAO investidor = new InvestidorDAO();
-        ContaDAO conta = new ContaDAO();
-        String resp;
-        Scanner s = new Scanner(System.in);
+		conta.setIdTitular(investidor.getId());
+		conta.salvarConta();
 
-        // Informações do Investidor
-        String email;
-        String senha;
+		this.menu(investidor);
+	}
+	
+	private void acessarConta() {
+		
+		// Classes
+		InvestidorDAO investidor = new InvestidorDAO();
+		ContaDAO conta = new ContaDAO();
+		String resp;
+		Scanner s = new Scanner(System.in);
 
-        System.out.println("******* Faça o seu Login *******\n");
-        
-        System.out.println("Digite seu e-mail: ");
-        email = s.nextLine();
+		// Informações do Investidor
+		String email;
+		String senha;
 
-        System.out.println("Digite sua senha: ");
-        senha = s.nextLine();
+		System.out.println("******* Faça o seu Login *******\n");
+		
+		do {
 
-        investidor = investidor.login(email, senha);
+			System.out.print("Digite seu e-mail: ");
+			email = s.nextLine();
 
-        if(investidor != null) {
-            investidor.setConta(conta.buscaConta(investidor.getId()));
-            this.menu(investidor);
-        } 
-        else {
-            System.out.println("Conta não encontrada!!\n");
-            System.out.println("Deseja Criar uma conta? [S/N]");
-            do {
+			if(!investidor.validaEmail(email)) {
+				System.out.println("E-mail inválido, tente novamente.\n");
+			}
 
-                resp = s.next();
-                resp = resp.toLowerCase();
-                
-                if(!"s".equals(resp) && !"n".equals(resp)) {
-                    System.out.println("Valor inválido, digite 's' para Sim e 'n' para Não");
-                }
-            
-            } while(!"s".equals(resp) && !"n".equals(resp));
+		} while(!investidor.validaEmail(email));
 
-            if(resp.equals("s")) {
-                this.criarConta();
-            }
-            else {
-                this.acessarConta();
-            }
+		System.out.print("Digite sua senha: ");
+		senha = s.nextLine();
 
-        }
-    }
-    
+		investidor = investidor.login(email, senha);
+
+		if(investidor != null) {
+			investidor.setConta(conta.buscaConta(investidor.getId()));
+			this.menu(investidor);
+		} 
+		else {
+			System.out.println("Conta não encontrada!!\n");
+			System.out.println("Deseja Criar uma conta? [S/N]");
+			do {
+
+				resp = s.next();
+				resp = resp.toLowerCase();
+				
+				if(!"s".equals(resp) && !"n".equals(resp)) {
+					System.out.println("Valor inválido, digite 's' para Sim e 'n' para Não");
+				}
+			
+			} while(!"s".equals(resp) && !"n".equals(resp));
+
+			if(resp.equals("s")) {
+				this.criarConta();
+			}
+			else {
+				this.acessarConta();
+			}
+
+		}
+	}
+	
 }

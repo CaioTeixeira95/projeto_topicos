@@ -3,55 +3,55 @@ import java.sql.SQLException;
 class ContaDAO extends Conta {
 
 	public void depositar(double valor) {
-        this.saldo += valor;
-    }
+		this.saldo += valor;
+	}
 
-    public void salvarConta() {
-        String sql = "INSERT INTO conta(banco, num_conta, agencia, id_titular, saldo) VALUES (?, ?, ?, ?, ?)";
-        this.insert(sql, this);
-    }
+	public void salvarConta() {
+		String sql = "INSERT INTO conta(banco, num_conta, agencia, id_titular, saldo) VALUES (?, ?, ?, ?, ?)";
+		this.insert(sql, this);
+	}
 
-    public Conta buscaConta(int id_titular) {
+	public Conta buscaConta(int id_titular) {
 
-    	Conexao connection = new Conexao();
-    	Conta conta = new Conta();
+		Conexao connection = new Conexao();
+		Conta conta = new Conta();
 
-    	try {
-        	
-        	String sql = "SELECT * FROM conta WHERE id_titular = '" + id_titular + "'";
-        	
-        	connection.getConnection();
-        	connection.stmt = connection.conn.createStatement();
-        	connection.rs = connection.stmt.executeQuery(sql);
+		try {
+			
+			String sql = "SELECT * FROM conta WHERE id_titular = '" + id_titular + "'";
+			
+			connection.getConnection();
+			connection.stmt = connection.conn.createStatement();
+			connection.rs = connection.stmt.executeQuery(sql);
 
-        	if(connection.rs.next()) {
-        		conta.setSaldo(connection.rs.getDouble("saldo"));
-        		conta.setNumConta(connection.rs.getString("num_conta"));
-        		conta.setAgencia(connection.rs.getString("agencia"));
-        		conta.setBanco(connection.rs.getString("banco"));
-        		conta.setIdTitular(id_titular);
-        	}
+			if(connection.rs.next()) {
+				conta.setSaldo(connection.rs.getDouble("saldo"));
+				conta.setNumConta(connection.rs.getString("num_conta"));
+				conta.setAgencia(connection.rs.getString("agencia"));
+				conta.setBanco(connection.rs.getString("banco"));
+				conta.setIdTitular(id_titular);
+			}
 
-        } catch(SQLException ex) {
-        	System.out.println("Erro na instrução SQL: " + ex.getMessage());
-        	System.out.println("Não foi possível fazer o login.");
-        	ex.printStackTrace();
-        } finally {
-        	try {
-        		connection.conn.close();
-        		connection.stmt.close();
-        	} catch(Exception exception) {
-        		exception.printStackTrace();
-        	}
+		} catch(SQLException ex) {
+			System.out.println("Erro na instrução SQL: " + ex.getMessage());
+			System.out.println("Não foi possível fazer o login.");
+			ex.printStackTrace();
+		} finally {
+			try {
+				connection.conn.close();
+				connection.stmt.close();
+			} catch(Exception exception) {
+				exception.printStackTrace();
+			}
 
-        	return conta;
-        }
+			return conta;
+		}
 
-    }
+	}
 
-    public void insert(String sql, Conta conta) {
+	public void insert(String sql, Conta conta) {
 
-    	Conexao connection = new Conexao();
+		Conexao connection = new Conexao();
 
 		try {
 
