@@ -36,13 +36,14 @@ class InvestidorDAO extends Investidor {
 
         try {
         	
-        	String sql = "SELECT nome, cpf FROM investidor WHERE email = '" + email + "' AND senha = '" + senha + "'";
+        	String sql = "SELECT * FROM investidor WHERE email = '" + email + "' AND senha = '" + senha + "'";
 
         	connection.getConnection();
         	connection.stmt = connection.conn.createStatement();
         	connection.rs = connection.stmt.executeQuery(sql);
 
         	if(connection.rs.next()) {
+        		investidor.setId(connection.rs.getInt("id"));
         		investidor.setNome(connection.rs.getString("nome"));
         		investidor.setCpf(connection.rs.getString("cpf"));
         		investidor.setEmail(email);
@@ -83,6 +84,14 @@ class InvestidorDAO extends Investidor {
 
 			connection.st.executeUpdate();
 			connection.st.close();
+
+			sql = "SELECT MAX(id) AS id FROM investidor";
+			connection.stmt = connection.conn.createStatement();
+			connection.rs = connection.stmt.executeQuery(sql);
+
+			if (connection.rs.next()) {
+				investidor.setId(connection.rs.getInt("id"));
+			}
 
 			System.out.println("Investidor cadastrado com sucesso!");
 

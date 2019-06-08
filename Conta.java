@@ -4,7 +4,7 @@ class Conta {
     protected String numConta;
     protected String agencia;
     protected double saldo;
-    protected String cpf_titular;
+    protected int id_titular;
     
     public double getSaldo() {
         return this.saldo;
@@ -38,12 +38,12 @@ class Conta {
         this.banco = banco;
     }
 
-    public String getCpfTitular() {
-        return this.cpf_titular;
+    public int getIdTitular() {
+        return this.id_titular;
     }
 
-    public void setCpfTitular(String cpf) {
-        this.cpf_titular = cpf;
+    public void setIdTitular(int id_titular) {
+        this.id_titular = id_titular;
     }
     
 }

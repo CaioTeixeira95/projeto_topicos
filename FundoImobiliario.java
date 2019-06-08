@@ -45,44 +45,53 @@ public class FundoImobiliario {
         // Variáveis
         String opcao;
 
-        System.out.println();
-        System.out.println("Olá " + investidor.getNome() + ", seja bem-vindo ao Fundo de Investimento Imobiliário FATEC!\n");
-        System.out.println("a - Comprar cotas");
-        System.out.println("b - Consultar suas cotas");
-        System.out.println("c - Vender suas cotas");
-        System.out.println("d - Minha Conta");
-        System.out.println("e - Alterar Dados da Conta");
-        if(investidor.getTipoInvestidor() == 1) {
-            System.out.println("? - Ler cotações do dia");
-        }
-        System.out.println("Selecione uma opção: ");
-        opcao = s.next();
+        do {
 
-        switch(opcao) {
+            System.out.println();
+            System.out.println("Olá " + investidor.getNome() + ", seja bem-vindo ao Fundo de Investimento Imobiliário FATEC!\n");
+            System.out.println("a - Comprar cotas");
+            System.out.println("b - Consultar suas cotas");
+            System.out.println("c - Vender suas cotas");
+            System.out.println("d - Minha Conta");
+            System.out.println("e - Alterar Dados da Conta");
+            if(investidor.getTipoInvestidor() == 1) {
+                System.out.println("? - Ler cotações do dia");
+            }
+            System.out.println("s - Sair");
+            System.out.print("Selecione uma opção: ");
+            opcao = s.next();
 
-            case "a":
-            break;          
+            switch(opcao) {
 
-            case "b":
-            break;            
+                case "a":
+                break;          
+
+                case "b":
+                break;            
+                
+                case "c":
+                break;            
+
+                case "d":
+                break;            
+
+                case "e":
+                break;            
+
+                case "f":
+                break;
+
+                case "s":
+                    System.out.println("Até mais " + investidor.getNome());
+                break;
+
+                default:
+                    System.out.println("Opção inválida!\n");
+                break;
+
+            }
             
-            case "c":
-            break;            
-
-            case "d":
-            break;            
-
-            case "e":
-            break;            
-
-            case "f":
-            break;
-
-            default:
-                System.out.println("Opção inválida!\n");
-            break;
-
-        }
+        } while(!opcao.equals("s"));
 
     }
     
@@ -159,13 +168,6 @@ public class FundoImobiliario {
 
         //s.close();
 
-        // Setando dados da Conta
-        conta.setBanco(banco);
-        conta.setNumConta(numConta);
-        conta.setAgencia(agencia);
-        conta.setSaldo(saldo);
-        conta.setCpfTitular(cpf);
-
         // Setando dados do Investidor
         investidor.setNome(nome);
         investidor.setCpf(cpf);
@@ -173,8 +175,16 @@ public class FundoImobiliario {
         investidor.setSenha(senha);
         investidor.setConta(conta);
 
+        // Setando dados da Conta
+        conta.setBanco(banco);
+        conta.setNumConta(numConta);
+        conta.setAgencia(agencia);
+        conta.setSaldo(saldo);
+
         // Gravando no banco de dados
         investidor.salvarInvestidor();
+
+        conta.setIdTitular(investidor.getId());
         conta.salvarConta();
 
         this.menu(investidor);
@@ -203,7 +213,7 @@ public class FundoImobiliario {
         investidor = investidor.login(email, senha);
 
         if(investidor != null) {
-            investidor.setConta(conta.buscaConta(investidor.getCpf()));
+            investidor.setConta(conta.buscaConta(investidor.getId()));
             this.menu(investidor);
         } 
         else {

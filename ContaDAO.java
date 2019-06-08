@@ -7,18 +7,18 @@ class ContaDAO extends Conta {
     }
 
     public void salvarConta() {
-        String sql = "INSERT INTO conta(banco, num_conta, agencia, cpf_titular, saldo) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO conta(banco, num_conta, agencia, id_titular, saldo) VALUES (?, ?, ?, ?, ?)";
         this.insert(sql, this);
     }
 
-    public Conta buscaConta(String cpf) {
+    public Conta buscaConta(int id_titular) {
 
     	Conexao connection = new Conexao();
     	Conta conta = new Conta();
 
     	try {
         	
-        	String sql = "SELECT * FROM conta WHERE cpf_titular = '" + cpf + "'";
+        	String sql = "SELECT * FROM conta WHERE id_titular = '" + id_titular + "'";
         	
         	connection.getConnection();
         	connection.stmt = connection.conn.createStatement();
@@ -29,7 +29,7 @@ class ContaDAO extends Conta {
         		conta.setNumConta(connection.rs.getString("num_conta"));
         		conta.setAgencia(connection.rs.getString("agencia"));
         		conta.setBanco(connection.rs.getString("banco"));
-        		conta.setCpfTitular(cpf);
+        		conta.setIdTitular(id_titular);
         	}
 
         } catch(SQLException ex) {
@@ -60,7 +60,7 @@ class ContaDAO extends Conta {
 			connection.st.setString(1, conta.getBanco());
 			connection.st.setString(2, conta.getNumConta());
 			connection.st.setString(3, conta.getAgencia());
-			connection.st.setString(4, conta.getCpfTitular());
+			connection.st.setInt(4, conta.getIdTitular());
 			connection.st.setDouble(5, conta.getSaldo());
 
 			connection.st.executeUpdate();
@@ -121,7 +121,7 @@ class ContaDAO extends Conta {
 			connection.st.setString(1, conta.getBanco());
 			connection.st.setString(2, conta.getNumConta());
 			connection.st.setString(3, conta.getAgencia());
-			connection.st.setString(4, conta.getCpfTitular());
+			connection.st.setInt(4, conta.getIdTitular());
 			connection.st.setDouble(5, conta.getSaldo());
 
 			connection.st.executeUpdate();

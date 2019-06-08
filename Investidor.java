@@ -1,11 +1,20 @@
 class Investidor {
 
+    private int id;
     private String nome;
     private String cpf;
     private String email;
     private String senha;
     private int tipo;
     Conta contaBancaria;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return this.id;
+    }
 
     public void setNome(String nome) {
         this.nome = nome;
@@ -47,7 +56,7 @@ class Investidor {
         return this.contaBancaria;
     }
 
-    public int setTipoInvestidor(int tipo) {
+    public void setTipoInvestidor(int tipo) {
         this.tipo = tipo;
     }
 
