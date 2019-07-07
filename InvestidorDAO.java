@@ -5,286 +5,317 @@ import java.util.regex.Matcher;
 
 class InvestidorDAO extends Investidor {
 
-	public void mostrarDadosInvestidor() {
-		System.out.println("****** Dados do Investidor *******");
-		System.out.println("Nome:\t" + this.getNome());
-		System.out.println("CPF:\t" + this.getCpf());
-		System.out.println("Banco:\t" + this.contaBancaria.getBanco());
-		System.out.println("Nº Conta:\t" + this.contaBancaria.getNumConta());
-		System.out.println("Agência:\t" + this.contaBancaria.getAgencia());
-		System.out.println("Saldo Atual:\t" + this.contaBancaria.getSaldo());
-	}
+    public String getNomeVendedor(int id_titular) {
 
-	public void salvarInvestidor() {
-		String sql = "INSERT INTO investidor (nome, cpf, email, senha) VALUES (?, ?, ?, ?)";
-		this.insert(sql, this);
-	}
+        Conexao connection = new Conexao();
 
-	public void alterarInvestidor() {
+        try {
 
-		Scanner s = new Scanner(System.in);
+            String sql = "SELECT nome FROM investidor WHERE id = " + id_titular;
 
-		// Variáveis
-		String novoNome = "";
-		String novoCpf = "";
-		String novoEmail = "";
-		String novaSenha = "";
-		String novaSenha2 = "";
-		boolean valido = false;
+            connection.getConnection();
+            connection.stmt = connection.conn.createStatement();
+            connection.rs = connection.stmt.executeQuery(sql);
 
-		System.out.println("Alterar dados do investidor. As informações que deseja manter basta deixar em branco.\n");
-		System.out.println("****** Dados do Atuais do Investidor *******");
-		System.out.println("Nome: " + this.getNome());
-		System.out.println("CPF: " + this.getCpf());
-		System.out.println("E-mail: " + this.getEmail() + "\n\n");
+            if (connection.rs.next()) {
+                return connection.rs.getString("nome");
+            }
 
-		System.out.print("Novo nome: ");
-		novoNome = s.nextLine();
+        } catch (SQLException e) {
+            System.out.println("Erro na instrução SQL: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.stmt.close();
+                connection.rs.close();
+                connection.conn.close();
+            } catch(Exception exception) {
+                exception.printStackTrace();
+            }
+        }
 
-		if(!novoNome.isEmpty()) {
-			this.setNome(novoNome);
-		}
+        return "Não há vendedor";
+    }
 
-		do {
-			
-			System.out.print("Novo CPF: ");
-			novoCpf = s.nextLine();
+    public void salvarInvestidor() {
+        String sql = "INSERT INTO investidor (nome, cpf, email, senha) VALUES (?, ?, ?, ?)";
+        this.insert(sql, this);
+    }
 
-			if(!novoCpf.isEmpty()) {
+    public void alterarInvestidor() {
 
-				if(this.verificaSeExiste("cpf", novoCpf)) {
-					System.out.println("CPF já cadastrado. Tente novamente!\n");
-				}
-				else if(!this.validaCpf(novoCpf)) {
-					System.out.println("CPF inválido. Tente novamente!\n");
-				}
-				else {
-					this.setCpf(novoCpf);
-					valido = true;
-				}
+        Scanner s = new Scanner(System.in);
 
-			}
-			else {
-				valido = true;
-			}
+        // Variáveis
+        String novoNome = "";
+        String novoCpf = "";
+        String novoEmail = "";
+        String novaSenha = "";
+        String novaSenha2 = "";
+        boolean valido = false;
 
-		} while(!valido);
+        System.out.println("Alterar dados do investidor. As informações que deseja manter basta deixar em branco.\n");
+        System.out.println("****** Dados do Atuais do Investidor *******");
+        System.out.println("Nome: " + this.getNome());
+        System.out.println("CPF: " + this.getCpf());
+        System.out.println("E-mail: " + this.getEmail() + "\n\n");
 
-		valido = false;
-		do {
+        System.out.print("Novo nome: ");
+        novoNome = s.nextLine();
 
-			System.out.print("Digite seu e-mail: ");
-			novoEmail = s.nextLine();
+        if(!novoNome.isEmpty()) {
+            this.setNome(novoNome);
+        }
 
-			if(!novoEmail.isEmpty()) {
-				if(this.verificaSeExiste("email", novoEmail)) {
-					System.out.println("Esse e-mail já está em uso, tente novamente.\n");
-				}
-				else if(!this.validaEmail(novoEmail)) {
-					System.out.println("E-mail inválido, tente novamente.\n");
-				}
-				else {
-					this.setEmail(novoEmail);
-					valido = true;
-				}
-			}
-			else {
-				valido = true;
-			}
+        do {
 
-		} while(!valido);
+            System.out.print("Novo CPF: ");
+            novoCpf = s.nextLine();
 
-		valido = false;
-		do {
+            if(!novoCpf.isEmpty()) {
 
-			System.out.print("Nova senha: ");
-			novaSenha = s.nextLine();
+                if(this.verificaSeExiste("cpf", novoCpf)) {
+                    System.out.println("CPF já cadastrado. Tente novamente!\n");
+                }
+                else if(!this.validaCpf(novoCpf)) {
+                    System.out.println("CPF inválido. Tente novamente!\n");
+                }
+                else {
+                    this.setCpf(novoCpf);
+                    valido = true;
+                }
 
-			if(!novaSenha.isEmpty()) {
+            }
+            else {
+                valido = true;
+            }
 
-				System.out.print("Confirme sua nova senha: ");
-				novaSenha2 = s.nextLine();
+        } while(!valido);
 
-				if (!novaSenha.equals(novaSenha2)) {
-					System.out.println("As senhas não são iguais, tente novamente!\n");
-				}
-				else {
-					this.setSenha(novaSenha);
-					valido = true;
-				}
+        valido = false;
+        do {
 
-			}
-			else {
-				valido = true;
-			}
+            System.out.print("Digite seu e-mail: ");
+            novoEmail = s.nextLine();
 
-		} while(!valido);
+            if(!novoEmail.isEmpty()) {
+                if(this.verificaSeExiste("email", novoEmail)) {
+                    System.out.println("Esse e-mail já está em uso, tente novamente.\n");
+                }
+                else if(!this.validaEmail(novoEmail)) {
+                    System.out.println("E-mail inválido, tente novamente.\n");
+                }
+                else {
+                    this.setEmail(novoEmail);
+                    valido = true;
+                }
+            }
+            else {
+                valido = true;
+            }
 
-		String sql = "UPDATE investidor SET nome = ?, cpf = ?, email = ?, senha = ? WHERE id = ?";
+        } while(!valido);
 
-		this.update(sql, this);
-	}
+        valido = false;
+        do {
 
-	public boolean validaCpf(String cpf) {
-		String regex = "(?!(\\d)\\1{10})\\d{11}";
-		Pattern pat = Pattern.compile(regex);
-		Matcher mat = pat.matcher(cpf);
-		return mat.matches();
-	}
+            System.out.print("Nova senha: ");
+            novaSenha = s.nextLine();
 
-	public boolean validaEmail(String email) {
-		String regex = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})$";
-		Pattern pat = Pattern.compile(regex);
-		Matcher mat = pat.matcher(email);
-		return mat.matches();
-	}
+            if(!novaSenha.isEmpty()) {
 
-	public boolean verificaSeExiste(String campo, String valor) {
-		Conexao conexao = new Conexao();
-		String sql = "SELECT COUNT(*) AS " + campo + " FROM investidor WHERE " + campo + " = '" + valor + "'";
-		return conexao.selectVerificar(sql, campo);
-	}
+                System.out.print("Confirme sua nova senha: ");
+                novaSenha2 = s.nextLine();
 
-	public InvestidorDAO login(String email, String senha) {
-		
-		Conexao connection = new Conexao();
-		InvestidorDAO investidor = new InvestidorDAO();
+                if (!novaSenha.equals(novaSenha2)) {
+                    System.out.println("As senhas não são iguais, tente novamente!\n");
+                }
+                else {
+                    this.setSenha(novaSenha);
+                    valido = true;
+                }
 
-		try {
-			
-			String sql = "SELECT * FROM investidor WHERE email = '" + email + "' AND senha = '" + senha + "'";
+            }
+            else {
+                valido = true;
+            }
 
-			connection.getConnection();
-			connection.stmt = connection.conn.createStatement();
-			connection.rs = connection.stmt.executeQuery(sql);
+        } while(!valido);
 
-			if(connection.rs.next()) {
-				investidor.setId(connection.rs.getInt("id"));
-				investidor.setNome(connection.rs.getString("nome"));
-				investidor.setCpf(connection.rs.getString("cpf"));
-				investidor.setEmail(email);
-				investidor.setSenha(senha);
-				investidor.setTipoInvestidor(connection.rs.getInt("tipo"));
-			}
+        if(!novoNome.isEmpty() || !novoEmail.isEmpty() || !novoCpf.isEmpty() || !novaSenha.isEmpty()) {
+            String sql = "UPDATE investidor SET nome = ?, cpf = ?, email = ?, senha = ? WHERE id = ?";
+            this.update(sql);
+        }
 
-		} catch(SQLException ex) {
-			System.out.println("Erro na instrução SQL: " + ex.getMessage());
-			System.out.println("Não foi possível fazer o login.");
-			ex.printStackTrace();
-		} finally {
-			try {
-				connection.stmt.close();
-				connection.rs.close();
-				connection.conn.close();
-			} catch(Exception exception) {
-				exception.getMessage();
-				exception.printStackTrace();
-			}
+    }
 
-			return investidor;
-		}
-	}
+    public boolean validaCpf(String cpf) {
+        String regex = "(?!(\\d)\\1{10})\\d{11}";
+        Pattern pat = Pattern.compile(regex);
+        Matcher mat = pat.matcher(cpf);
+        return mat.matches();
+    }
 
-	public void insert(String sql, Investidor investidor) {
+    public boolean validaEmail(String email) {
+        String regex = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})$";
+        Pattern pat = Pattern.compile(regex);
+        Matcher mat = pat.matcher(email);
+        return mat.matches();
+    }
 
-		Conexao connection = new Conexao();
+    public boolean verificaSeExiste(String campo, String valor) {
+        Conexao conexao = new Conexao();
+        String sql = "SELECT COUNT(*) AS " + campo + " FROM investidor WHERE " + campo + " = '" + valor + "'";
+        return conexao.selectVerificar(sql, campo);
+    }
 
-		try {
+    public InvestidorDAO login(String email, String senha) {
 
-			connection.getConnection();
-			connection.st = connection.conn.prepareStatement(sql);
-			connection.st.setString(1, investidor.getNome());
-			connection.st.setString(2, investidor.getCpf());
-			connection.st.setString(3, investidor.getEmail());
-			connection.st.setString(4, investidor.getSenha());
+        Conexao connection = new Conexao();
+        InvestidorDAO investidor = null;
 
-			connection.st.executeUpdate();
-			connection.st.close();
+        try {
 
-			sql = "SELECT MAX(id) AS id FROM investidor";
-			connection.stmt = connection.conn.createStatement();
-			connection.rs = connection.stmt.executeQuery(sql);
+            String sql = "SELECT * FROM investidor WHERE email = '" + email + "' AND senha = '" + senha + "'";
 
-			if (connection.rs.next()) {
-				investidor.setId(connection.rs.getInt("id"));
-			}
+            connection.getConnection();
+            connection.stmt = connection.conn.createStatement();
+            connection.rs = connection.stmt.executeQuery(sql);
 
-			System.out.println("Investidor cadastrado com sucesso!");
+            if(connection.rs.next()) {
+                investidor = new InvestidorDAO();
+                investidor.setId(connection.rs.getInt("id"));
+                investidor.setNome(connection.rs.getString("nome"));
+                investidor.setCpf(connection.rs.getString("cpf"));
+                investidor.setEmail(email);
+                investidor.setSenha(senha);
+                investidor.setTipoInvestidor(connection.rs.getInt("tipo"));
+            }
 
-		} catch(SQLException ex) {
-			System.out.println("Erro na instrução SQL: " + ex.getMessage());
-			System.out.println("Falha ao cadastrar o investidor!");
-			ex.printStackTrace();
-		} finally {
-			try {
-				connection.conn.close();
-				connection.st.close();
-			} catch(Exception exception) {
-				exception.printStackTrace();
-			}
-		}
+        } catch(SQLException ex) {
+            System.out.println("Erro na instrução SQL: " + ex.getMessage());
+            System.out.println("Não foi possível fazer o login.");
+            ex.printStackTrace();
+        } finally {
+            try {
+                connection.stmt.close();
+                connection.rs.close();
+                connection.conn.close();
+            } catch(Exception exception) {
+                exception.getMessage();
+                exception.printStackTrace();
+            }
+        }
 
-	}
+        return investidor;
 
-	public void delete(String sql) {
+    }
 
-		Conexao connection = new Conexao();
+    public void insert(String sql, Investidor investidor) {
 
-		try {
-			
-			connection.getConnection();
-			connection.stmt = connection.conn.createStatement();
-			connection.stmt.executeQuery(sql);
+        Conexao connection = new Conexao();
 
-			System.out.println("Investidor excluído com sucesso.");
+        try {
 
-		} catch(SQLException ex) {
-			System.out.println("Erro na instrução SQL: " + ex.getMessage());
-			System.out.println("Não foi possível deletar o Investidor");
-			ex.printStackTrace();
-		} finally {
-			try {
-				connection.conn.close();
-				connection.stmt.close();
-			} catch(Exception exception) {
-				exception.printStackTrace();
-			}
-		}
+            connection.getConnection();
+            connection.st = connection.conn.prepareStatement(sql);
+            connection.st.setString(1, investidor.getNome());
+            connection.st.setString(2, investidor.getCpf());
+            connection.st.setString(3, investidor.getEmail());
+            connection.st.setString(4, investidor.getSenha());
 
-	}
+            connection.st.executeUpdate();
+            connection.st.close();
 
-	public void update(String sql, Investidor investidor) {
+            sql = "SELECT MAX(id) AS id FROM investidor";
+            connection.stmt = connection.conn.createStatement();
+            connection.rs = connection.stmt.executeQuery(sql);
 
-		Conexao connection = new Conexao();
+            if (connection.rs.next()) {
+                investidor.setId(connection.rs.getInt("id"));
+            }
 
-		try {
-			
-			connection.getConnection();
-			connection.st = connection.conn.prepareStatement(sql);
-			connection.st.setString(1, investidor.getNome());
-			connection.st.setString(2, investidor.getCpf());
-			connection.st.setString(3, investidor.getEmail());
-			connection.st.setString(4, investidor.getSenha());
-			connection.st.setInt(5, investidor.getId());
+            System.out.println("Investidor cadastrado com sucesso!");
 
-			connection.st.executeUpdate();
-			connection.st.close();
+        } catch(SQLException ex) {
+            System.out.println("Erro na instrução SQL: " + ex.getMessage());
+            System.out.println("Falha ao cadastrar o investidor!");
+            ex.printStackTrace();
+        } finally {
+            try {
+                connection.conn.close();
+                connection.st.close();
+            } catch(Exception exception) {
+                exception.printStackTrace();
+            }
+        }
 
-			System.out.println("Investidor alterado com sucesso!");
+    }
 
-		} catch(SQLException ex) {
-			System.out.println("Erro na instrução SQL: " + ex.getMessage());
-			System.out.println("Não foi possível alterar o Investidor");
-			ex.printStackTrace();
-		} finally {
-			try {
-				connection.conn.close();
-				connection.stmt.close();
-			} catch(Exception exception) {
-				exception.printStackTrace();
-			}
-		}
+    public void delete() {
 
-	}
+        Conexao connection = new Conexao();
+
+        try {
+
+            connection.getConnection();
+            String sql = "DELETE FROM investidor WHERE id = " + this.getId();
+            connection.stmt = connection.conn.createStatement();
+            connection.stmt.executeUpdate(sql);
+
+            System.out.println("Investidor excluído com sucesso.");
+
+            sql = "UPDATE cotas SET id_titular = NULL, vendendo = false WHERE id_titular = " + this.getId();
+            connection.stmt = connection.conn.createStatement();
+            connection.stmt.executeUpdate(sql);
+
+        } catch(SQLException ex) {
+            System.out.println("Erro na instrução SQL: " + ex.getMessage());
+            System.out.println("Não foi possível deletar o Investidor");
+            ex.printStackTrace();
+        } finally {
+            try {
+                connection.conn.close();
+                connection.stmt.close();
+            } catch(Exception exception) {
+                exception.printStackTrace();
+            }
+        }
+
+    }
+
+    public void update(String sql) {
+
+        Conexao connection = new Conexao();
+
+        try {
+
+            connection.getConnection();
+            connection.st = connection.conn.prepareStatement(sql);
+            connection.st.setString(1, this.getNome());
+            connection.st.setString(2, this.getCpf());
+            connection.st.setString(3, this.getEmail());
+            connection.st.setString(4, this.getSenha());
+            connection.st.setInt(5, this.getId());
+
+            connection.st.executeUpdate();
+            connection.st.close();
+
+            System.out.println("Investidor alterado com sucesso!");
+
+        } catch(SQLException ex) {
+            System.out.println("Erro na instrução SQL: " + ex.getMessage());
+            System.out.println("Não foi possível alterar o Investidor");
+            ex.printStackTrace();
+        } finally {
+            try {
+                connection.st.close();
+                connection.conn.close();
+            } catch(Exception exception) {
+                exception.printStackTrace();
+            }
+        }
+
+    }
 
 }
